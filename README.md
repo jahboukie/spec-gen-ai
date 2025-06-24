@@ -1,24 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SpecGen AI
 
-## Getting Started
+An AI-powered SaaS platform that converts founder ideas into comprehensive technical specifications through Socratic dialogue using Google Gemini AI.
 
-First, run the development server:
+## Quality Gauntlet & Development Workflow
+
+This project follows strict CI/CD practices with comprehensive quality gates. **All code must pass the Quality Gauntlet before being committed.**
+
+### Pre-Commit Quality Gates
+
+**REQUIRED: Run before every commit:**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run precommit
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This runs:
+- ESLint (code quality)
+- TypeScript checking (type safety)  
+- Unit tests (functionality verification)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**For comprehensive testing:**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run quality-gate
+```
+
+This includes coverage verification (80% threshold required).
+
+### Development Setup
+
+1. Install dependencies:
+```bash
+npm install --legacy-peer-deps
+```
+
+2. Set up environment variables (copy `.env.example` to `.env.local`)
+
+3. Initialize database:
+```bash
+npm run db:push
+npm run db:generate
+```
+
+4. Start development server:
+```bash
+npm run dev
+```
+
+### CI/CD Pipeline
+
+The Quality Gauntlet runs automatically on PRs to `main`:
+- ✅ Code Quality & Linting
+- ✅ TypeScript Type Checking  
+- ✅ Unit Tests & Coverage (80% minimum)
+- ✅ Build Verification
+- ✅ Integration Tests
+
+**Branch Protection:** Direct pushes to `main` are blocked. All changes must go through PR review and pass the Quality Gauntlet.
 
 ## Learn More
 

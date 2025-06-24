@@ -40,9 +40,8 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-      # Temporarily disabled during Next.js 14 migration
-      # - name: Check TypeScript
-      #   run: npm run type-check
+      - name: Check TypeScript
+        run: npm run type-check
 
   unit-tests:
     name: Unit Tests & Coverage
