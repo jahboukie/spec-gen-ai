@@ -51,14 +51,14 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin",
   },
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line
     async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id
       }
       return token
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line
     async session({ session, token }: any) {
       if (token && session.user) {
         session.user.id = token.id as string
