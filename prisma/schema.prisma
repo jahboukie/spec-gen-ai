@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  specs Spec[]
+
+  @@map("users")
+}
+
+model Spec {
+  id                 String    @id @default(cuid())
+  userId             String    @map("user_id")
+  projectTitle       String    @map("project_title")
+  initialDescription String    @map("initial_description") @db.Text
+  status             SpecStatus @default(DRAFT)
+  shareableId        String?   @unique @map("shareable_id")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dialogueEntries   DialogueEntry[]
+  generatedDocuments GeneratedDocument[]
+
+  @@map("specs")
+}
+
+model DialogueEntry {
+  id            String      @id @default(cuid())
+  specId        String      @map("spec_id")
+  role          DialogueRole
+  content       String      @db.Text
+  sequenceOrder Int         @map("sequence_order")
+  createdAt     DateTime    @default(now()) @map("created_at")
+
+  // Relations
+  spec Spec @relation(fields: [specId], references: [id], onDelete: Cascade)
+
+  @@map("dialogue_entries")
+  @@index([specId, sequenceOrder])
+}
+
+model GeneratedDocument {
+  id              String   @id @default(cuid())
+  specId          String   @map("spec_id")
+  contentMarkdown String   @map("content_markdown") @db.Text
+  version         Int      @default(1)
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  // Relations
+  spec Spec @relation(fields: [specId], references: [id], onDelete: Cascade)
+
+  @@map("generated_documents")
+  @@index([specId, version])
+}
+
+enum SpecStatus {
+  DRAFT
+  COMPLETED
+}
+
+enum DialogueRole {
+  USER
+  AI
+}
