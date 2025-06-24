@@ -135,13 +135,17 @@ jobs:
     steps:
       - name: Check all jobs status
         run: |
-          if [[ "${{ needs.lint.result }}" != "success" ]] || \
-             [[ "${{ needs.unit-tests.result }}" != "success" ]] || \
-             [[ "${{ needs.build.result }}" != "success" ]]; then
+          echo "Lint result: ${{ needs.lint.result }}"
+          echo "Unit tests result: ${{ needs.unit-tests.result }}"
+          echo "Build result: ${{ needs.build.result }}"
+          
+          if [[ "${{ needs.lint.result }}" == "success" ]] && \
+             [[ "${{ needs.unit-tests.result }}" == "success" ]] && \
+             [[ "${{ needs.build.result }}" == "success" ]]; then
+            echo "✅ Quality Gauntlet PASSED"
+            echo "All quality checks passed successfully. PR is ready for review."
+          else
             echo "❌ Quality Gauntlet FAILED"
             echo "One or more quality checks failed. Please review and fix issues before merging."
             exit 1
-          else
-            echo "✅ Quality Gauntlet PASSED"
-            echo "All quality checks passed successfully. PR is ready for review."
           fi
