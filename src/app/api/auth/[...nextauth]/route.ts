@@ -1,6 +1,8 @@
-import NextAuth, { type NextAuthOptions } from "next-auth"
+import NextAuth from "next-auth"
 import { authOptions } from "@/lib/auth"
 
-const handler = NextAuth(authOptions as NextAuthOptions)
+// NextAuth v4 App Router pattern - avoid type imports to prevent CI issues
+const handler = NextAuth(authOptions)
 
-export { handler as GET, handler as POST }
+export const GET = handler
+export const POST = handler
