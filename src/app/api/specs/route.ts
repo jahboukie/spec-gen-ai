@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
 
@@ -11,7 +12,7 @@ const createSpecSchema = z.object({
 // GET /api/specs - Get all specs for authenticated user
 export async function GET() {
   try {
-    const session = await auth()
+    const session = await getServerSession(authOptions)
     
     if (!session?.user?.id) {
       return NextResponse.json(
@@ -56,7 +57,7 @@ export async function GET() {
 // POST /api/specs - Create new spec
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth()
+    const session = await getServerSession(authOptions)
     
     if (!session?.user?.id) {
       return NextResponse.json(
